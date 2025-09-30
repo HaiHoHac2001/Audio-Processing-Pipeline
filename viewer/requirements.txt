@@ -1,0 +1,16 @@
+# Web Framework
+Flask>=2.3.0
+Werkzeug>=2.3.0
+
+# AI Transcription
+faster-whisper>=1.0.1
+
+# Audio Processing
+pydub>=0.25.1
+ffmpeg-python>=0.2.0
+
+# Data Processing
+numpy>=1.24
+
+# HTTP Requests (for testing)
+requests>=2.31.0

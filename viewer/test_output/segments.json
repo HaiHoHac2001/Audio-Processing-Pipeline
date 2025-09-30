@@ -1,0 +1,50 @@
+[
+  {
+    "text": "みなさん、こんにちは、キンスです。",
+    "start_time": 0.0,
+    "end_time": 2.06,
+    "path": "segments/segment_001.mp3"
+  },
+  {
+    "text": "今日は先週のことをお話します。",
+    "start_time": 3.06,
+    "end_time": 5.62,
+    "path": "segments/segment_002.mp3"
+  },
+  {
+    "text": "月曜日朝はだいたい8時頃に起きました。",
+    "start_time": 6.61,
+    "end_time": 10.86,
+    "path": "segments/segment_003.mp3"
+  },
+  {
+    "text": "目覚まし時計は使えませんでした。",
+    "start_time": 11.9,
+    "end_time": 14.1,
+    "path": "segments/segment_004.mp3"
+  },
+  {
+    "text": "自然に目が覚めました。",
+    "start_time": 15.2,
+    "end_time": 16.72,
+    "path": "segments/segment_005.mp3"
+  },
+  {
+    "text": "カーテンの開けて、外を見ました。",
+    "start_time": 17.8,
+    "end_time": 20.22,
+    "path": "segments/segment_006.mp3"
+  },
+  {
+    "text": "晴れの日はとても気持ちが良かったです。",
+    "start_time": 21.28,
+    "end_time": 23.92,
+    "path": "segments/segment_007.mp3"
+  },
+  {
+    "text": "時々鳥の声も聞こえました。",
+    "start_time": 24.91,
+    "end_time": 27.09,
+    "path": "segments/segment_008.mp3"
+  }
+]

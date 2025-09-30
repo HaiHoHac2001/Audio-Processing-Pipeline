@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sentence Segments Viewer</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 24px; }
+    header { display:flex; gap:12px; align-items:center; margin-bottom: 16px;}
+    button { padding:8px 12px; border-radius:10px; border:1px solid #ccc; background:#fafafa; cursor:pointer;}
+    button:active{ transform: translateY(1px); }
+    ul { list-style: none; padding:0; }
+    li { padding: 12px; margin-bottom: 12px; border: 1px solid #eee; border-radius: 12px; }
+    .row { display:grid; grid-template-columns: 60px 1fr; gap: 12px; align-items: center;}
+    .txt { font-size: 16px; }
+    .time { color: #666; font-size: 12px; }
+    .playing { border-color:#8ab4f8; background:#f5f9ff; }
+    .muted { opacity: 0.7; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .footer { margin-top: 24px; color:#666; font-size:13px;}
+  </style>
+</head>
+<body>
+  <header>
+    <input type="file" id="jsonFile" accept="application/json">
+    <button id="autoNext">Auto‑Next: OFF</button>
+    <button id="scroll">Auto‑Scroll: ON</button>
+  </header>
+
+  <ul id="list"></ul>
+
+  <div class="footer">
+    Tip: Put <code>viewer/</code> and <code>output/</code> under the same parent folder, then open this file and click <b>Load JSON</b> → choose <code>output/segments.json</code>.
+  </div>
+
+<script>
+let items = [];
+let autoNext = false;
+let autoScroll = true;
+let currentIndex = -1;
+
+const jsonInput = document.getElementById('jsonFile');
+const list = document.getElementById('list');
+const btnAuto = document.getElementById('autoNext');
+const btnScroll = document.getElementById('scroll');
+
+btnAuto.onclick = () => {
+  autoNext = !autoNext;
+  btnAuto.textContent = 'Auto‑Next: ' + (autoNext ? 'ON' : 'OFF');
+};
+
+btnScroll.onclick = () => {
+  autoScroll = !autoScroll;
+  btnScroll.textContent = 'Auto‑Scroll: ' + (autoScroll ? 'ON' : 'OFF');
+};
+
+jsonInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const text = await file.text();
+  items = JSON.parse(text);
+  render();
+});
+
+function sec(s){ return (Math.round(s*1000)/1000).toFixed(3); }
+
+function render(){
+  list.innerHTML = '';
+  items.forEach((it, i) => {
+    const li = document.createElement('li');
+    li.className = 'item';
+    li.dataset.index = i;
+    li.innerHTML = `
+      <div class="row">
+        <div><audio preload="none" controls src="../output/${it.path}"></audio></div>
+        <div>
+          <div class="txt">${escapeHtml(it.text)}</div>
+          <div class="time mono">${sec(it.start_time)}s → ${sec(it.end_time)}s</div>
+        </div>
+      </div>
+    `;
+    const audio = li.querySelector('audio');
+    audio.addEventListener('play', () => onPlay(i));
+    audio.addEventListener('ended', () => onEnded(i));
+    list.appendChild(li);
+  });
+}
+
+function onPlay(i){
+  highlight(i);
+  currentIndex = i;
+}
+
+function onEnded(i){
+  if (autoNext){
+    const next = list.querySelector(`li[data-index="${i+1}"] audio`);
+    if (next){
+      next.play();
+      if (autoScroll) next.closest('li').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }
+}
+
+function highlight(i){
+  document.querySelectorAll('li').forEach(li => li.classList.remove('playing'));
+  const li = list.querySelector(`li[data-index="${i}"]`);
+  if (li) li.classList.add('playing');
+}
+
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  }[m]));
+}
+</script>
+</body>
+</html>
